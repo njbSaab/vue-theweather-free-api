@@ -84,7 +84,7 @@ const weather = ref(null)
 
 function getWeather() {
   try {
-    fetch(`${baseUrl}?q=${city.value}&appid=${apiKey}`)
+    fetch(`${baseUrl}?q=${city.value}&units=metric&appid=${apiKey}`)
       .then(response => {
         // Проверяем, был ли запрос успешным
         if (!response.ok) {

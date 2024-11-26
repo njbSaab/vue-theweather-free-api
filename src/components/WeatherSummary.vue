@@ -1,30 +1,64 @@
 <template>
-    <div class="summary">
+    <div v-if="weather?.weather" class="summary">
     <div
-        style="background-image: url('/src/assets/img/weather-main/thunderstorm.png');"
         class="pic-main"
-    ></div>
+    >
+    <img
+      :src="getWeatherImage(weather?.weather[0]?.description)"
+      alt="Weather Icon"
+      style="max-width: 100%;"
+    />
+    </div>
     <div class="weather">
         <div class="temp">
-        14 °C
+        {{ Math.round( weather?.main?.temp) }} °C
         </div>
         <div class="weather-desc text-block">
-        Thunderstorm
+        {{ CapitalizeFirstLetter(weather?.weather[0]?.description) }}
         </div>
     </div>
     <div class="city text-block">
-        Paris,
-        FR
+        {{ weather?.name }},    
+        {{ weather?.sys?.country }}
     </div>
     <div class="date text-block">
-        Thu, March 16, 2023
+        {{ newDate }}
     </div>
     </div>
 </template>
 
 <script setup>
+import { CapitalizeFirstLetter } from '@/utils/firstUpperLatter';
 
+defineProps({
+  weather: {
+    type: Object,
+    required: true,
+  },
+});
+
+const newDate = new Date().toLocaleString('en-US', {
+  weekday: 'short',
+  month: 'short',
+  year: 'numeric',
+  day: 'numeric',
+});
+
+// Функция для возвращения пробелов
+function getWeatherImage(description) {
+  if (!description) return '/path/to/default-image.png'; // Путь к изображению по умолчанию
+
+  // Оставляем пробелы как есть
+  const formattedDescription = description; // Не кодируем пробелы
+  try {
+    return require(`@/assets/img/weather-main/${formattedDescription}.png`);
+  } catch (error) {
+    console.error(`Image not found for description: ${formattedDescription}`, error);
+    return '/path/to/default-image.png'; // Путь к изображению по умолчанию
+  }
+}
 </script>
+
 
 
 
